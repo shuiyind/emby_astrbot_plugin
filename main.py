@@ -99,9 +99,23 @@ class EmbyReporterPlugin(Star):
         buf.seek(0)
         return buf
 
-    @filter.command("emby_report", alias={"emby", "emby状态"})
-    async def emby_report(self, event: AstrMessageEvent):
-        """查询 Emby 服务器状态和媒体库信息，支持 Markdown 或图片输出"""
+    @filter.event_message_type(filter.EventMessageType.ALL)
+    async def auto_emby_report(self, event: AstrMessageEvent):
+        """自动检测问题句式并触发 Emby 信息查询"""
+        msg = event.message_str.strip()
+        trigger_phrases = [
+            "我的 emby 服务器状态",
+            "emby 影视库有多少内容",
+            "emby 现在有多少电影",
+            "emby 现在有多少电视剧",
+            "emby 媒体库统计",
+            "emby 服务器信息",
+            "emby 统计",
+            "emby 有多少音乐",
+            "查询 emby 媒体库"
+        ]
+        if not any(phrase in msg for phrase in trigger_phrases):
+            return
         url = self.config.get("url", "")
         api_key = self.config.get("api_key", "")
         output_type = self.config.get("output_type", "markdown")
