@@ -1,5 +1,5 @@
-name: emby_reporter
+name: emby_astrbot_plugin
 version: 1.2.0
 author: shuiyind
-description: Emby 信息查询与报告插件，支持 Markdown 和图片输出。自动问题句式触发、中文报告、MK2适配、指令识别优化、指令兼容性说明。
-repo: https://github.com/shuiyind/emby_astrbot_plugin
+description: Emby 信息查询与报告插件，支持 Markdown 和图片输出，自动触发，Telegram 兼容，字体可配置，美化图片，自动清理临时文件。
+homepage: https://github.com/shuiyind/emby_astrbot_plugin

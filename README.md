@@ -2,58 +2,58 @@
 
 插件支持多种指令触发方式，常用指令如下：
 
-- /emby
-- /emby状态
-- /emby统计
-- /emby服务器
-- /embyreport
-- /emby_info
+# emby_astrbot_plugin
 
-部分平台（如 Telegram）可能只识别简短指令，建议优先使用 /emby 或 /emby状态。
-如需在 Telegram 菜单显示全部指令，可在 BotFather 中手动添加命令。
+Emby 信息查询与报告插件，支持 Markdown 和图片输出，自动触发，Telegram 兼容，字体可配置，美化图片，自动清理临时文件。
 
-如遇指令无法识别，请确保插件已重载并为最新版本。
-# Emby AstrBot 插件
+## 功能简介
 
-## 简介
-
-本插件用于在 AstrBot 聊天机器人平台中查询 Emby 服务器状态和媒体库信息，支持 Markdown 和图片（1280x1024，自动压缩至2MB以内）两种输出方式。
-
-- 支持通过指令获取 Emby 服务器名称、版本、操作系统等信息。
-- 支持统计各媒体库的内容数量。
-- 支持将报告以 Markdown 或图片格式输出。
-- 插件配置可在 AstrBot 管理面板中可视化设置。
+- 支持 Emby 服务器状态、媒体库统计查询
+- 支持 Markdown 和图片报告输出
+- 自动检测问题句式触发 emby 查询
+- 多别名指令注册
+- 中文报告，Telegram MarkdownV2 兼容
+- 字体可配置，自动检测本地/系统字体
+- 图片报告美化（标题加粗、分隔线、表格居中、颜色区分）
+- 自动清理临时图片文件
 
 ## 安装方法
 
-1. 将本插件目录（emby_astrbot_plugin）放入 AstrBot 的 `data/plugins` 目录下。
-2. 在 AstrBot 管理面板中启用插件，并填写 Emby 服务器地址、API 密钥和输出方式。
-3. 安装依赖（AstrBot 会自动安装 requirements.txt 中的依赖）。
+1. 在 AstrBot 管理面板插件市场搜索 `emby_astrbot_plugin`，一键安装。
+2. 或手动下载本仓库，放入 AstrBot 插件目录。
 
-## 配置说明
+## 依赖
 
-插件支持以下配置项（可在管理面板可视化设置）：
-- `url`：Emby 服务器地址（如 http://your-emby-server:8096）
-- `api_key`：Emby API 密钥
-- `output_type`：输出方式，可选 `markdown` 或 `image`
-- `font_file`：图片报告使用的字体文件名（如 NotoSansSC-Regular.ttf），需放在插件目录下
+插件自动安装依赖，无需手动操作。
 
+## 配置示例
 
-## 使用方法
+```json
+{
+	"url": "http://你的emby地址:8096",
+	"api_key": "你的Emby API密钥",
+	"output_type": "image", // 可选 markdown 或 image
+	"font_file": "NotoSansSC-Regular.ttf" // 可选，支持自定义字体
+}
+```
 
-插件支持两种触发方式：
+## 指令与自动触发
 
-1. 指令触发（如 `/emby_report`、`/emby`、`/emby状态`）。
-2. 自动问题句式触发：只要在聊天中完整出现以下问题句式之一，插件会自动回复 Emby 信息。
+- 指令触发：`/emby_report` 或 `/emby` 等多种别名
+- 自动触发：发送完整问题句式自动响应 emby 状态/统计
 
-自动触发支持的问题句式示例：
- - 我的 emby 服务器状态
- - emby 影视库有多少内容
- - emby 现在有多少电影
- - emby 现在有多少电视剧
- - emby 媒体库统计
- - emby 服务器信息
- - emby 统计
+## 图片报告美化
+
+- emby 风格黑绿渐变背景，标题加粗，表格居中，颜色区分
+- 支持自定义字体，中文无方块字
+
+## 兼容性
+
+- 支持 AstrBot 最新版本，Telegram MarkdownV2
+
+## 开源协议
+
+AGPLv3
  - emby 有多少音乐
  - 查询 emby 媒体库
 
