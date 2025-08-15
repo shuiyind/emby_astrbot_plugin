@@ -90,17 +90,28 @@ class EmbyReporterPlugin(Star):
         # 美化图片报告样式，标题加粗、分隔线、表格居中、颜色区分
         import tempfile, os
         width, height = 1280, 1024
-        bg_color = (245, 248, 255)
-        title_color = (40, 80, 180)
-        label_color = (60, 60, 60)
-        value_color = (20, 120, 60)
-        table_header_bg = (220, 230, 250)
-        table_line_color = (200, 200, 200)
+        # 美化图片报告样式，标题加粗、分隔线、表格居中、颜色区分
+        import tempfile, os
+        width, height = 1280, 1024
+        # emby风格黑绿渐变背景
+        bg_color_top = (20, 30, 20)      # 深黑绿色
+        bg_color_bottom = (40, 180, 80)  # emby主绿色
+        title_color = (80, 255, 120)      # emby亮绿色
+        label_color = (220, 220, 220)    # 浅灰色
+        value_color = (80, 255, 120)     # emby亮绿色
+        table_header_bg = (30, 60, 30)   # 深绿色
+        table_line_color = (80, 255, 120) # emby亮绿色
         font_size = 32
         font_bold_size = 40
         font = self.get_chinese_font(font_size)
         font_bold = self.get_chinese_font(font_bold_size)
-        img = Image.new("RGB", (width, height), bg_color)
+        img = Image.new("RGB", (width, height), bg_color_top)
+        for y_pos in range(height):
+            ratio = y_pos / height
+            r = int(bg_color_top[0] * (1 - ratio) + bg_color_bottom[0] * ratio)
+            g = int(bg_color_top[1] * (1 - ratio) + bg_color_bottom[1] * ratio)
+            b = int(bg_color_top[2] * (1 - ratio) + bg_color_bottom[2] * ratio)
+            ImageDraw.Draw(img).line([(0, y_pos), (width, y_pos)], fill=(r, g, b))
         draw = ImageDraw.Draw(img)
         y = 50
         # 标题
@@ -156,8 +167,6 @@ class EmbyReporterPlugin(Star):
             tmp.write(buf.read())
             tmp_path = tmp.name
         return tmp_path
-
-    @filter.event_message_type(filter.EventMessageType.ALL)
     async def auto_emby_report(self, event: AstrMessageEvent):
         """自动检测问题句式并触发 Emby 信息查询"""
         msg = event.message_str.strip()
