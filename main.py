@@ -59,7 +59,8 @@ class EmbyReporterPlugin(Star):
         return md
 
     def format_image(self, system_info, libraries):
-        # 生成 1280x1024 的图片，内容为报告（中文标题）
+        # 生成 1280x1024 的图片，内容为报告（中文标题），返回临时文件路径
+        import tempfile, os
         width, height = 1280, 1024
         bg_color = (255, 255, 255)
         font_color = (0, 0, 0)
@@ -98,7 +99,11 @@ class EmbyReporterPlugin(Star):
             buf = io.BytesIO()
             img.save(buf, format="PNG", optimize=True)
         buf.seek(0)
-        return buf
+        # 保存为临时文件
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as tmp:
+            tmp.write(buf.read())
+            tmp_path = tmp.name
+        return tmp_path
 
     @filter.event_message_type(filter.EventMessageType.ALL)
     async def auto_emby_report(self, event: AstrMessageEvent):
@@ -125,8 +130,14 @@ class EmbyReporterPlugin(Star):
             return
         system_info, libraries = await self.fetch_emby_data(url, api_key)
         if output_type == "image":
-            buf = self.format_image(system_info, libraries)
-            yield event.image_result(buf)
+            img_path = self.format_image(system_info, libraries)
+            yield event.image_result(img_path)
+            # 自动清理临时文件
+            import os
+            try:
+                os.remove(img_path)
+            except Exception as e:
+                logger.error(f"临时图片文件清理失败: {e}")
         else:
             md = self.format_markdown(system_info, libraries)
             yield event.plain_result(md)

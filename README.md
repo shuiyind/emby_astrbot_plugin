@@ -1,3 +1,18 @@
+## 指令触发说明
+
+插件支持多种指令触发方式，常用指令如下：
+
+- /emby
+- /emby状态
+- /emby统计
+- /emby服务器
+- /embyreport
+- /emby_info
+
+部分平台（如 Telegram）可能只识别简短指令，建议优先使用 /emby 或 /emby状态。
+如需在 Telegram 菜单显示全部指令，可在 BotFather 中手动添加命令。
+
+如遇指令无法识别，请确保插件已重载并为最新版本。
 # Emby AstrBot 插件
 
 ## 简介
