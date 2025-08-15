@@ -1,5 +1,5 @@
 name: emby_reporter
-version: 1.0.0
+version: 1.1.0
 author: shuiyind
-description: Emby 信息查询与报告插件，支持 Markdown 和图片输出
-repo: https://github.com/shuiyind/emby
+description: Emby 信息查询与报告插件，支持 Markdown 和图片输出。自动问题句式触发、中文报告、MK2适配、指令识别优化。
+repo: https://github.com/shuiyind/emby_astrbot_plugin
