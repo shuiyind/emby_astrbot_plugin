@@ -7,7 +7,7 @@ import jinja2
 from PIL import Image, ImageDraw, ImageFont
 import io
 
-@register("emby_reporter", "shuiyind", "Emby 信息查询与报告插件，支持 Markdown 和图片输出", "1.0.0", "https://github.com/shuiyind/emby")
+@register("emby_astrbot_plugin", "shuiyind", "Emby 信息查询与报告插件，支持 Markdown 和图片输出，自动触发，Telegram 兼容，字体可配置，美化图片，自动清理临时文件。", "1.2.0", "https://github.com/shuiyind/emby_astrbot_plugin")
 class EmbyReporterPlugin(Star):
     def __init__(self, context: Context, config: AstrBotConfig):
         super().__init__(context)
