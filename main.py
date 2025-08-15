@@ -92,15 +92,15 @@ class EmbyReporterPlugin(Star):
         width, height = 1280, 1024
         # 美化图片报告样式，标题加粗、分隔线、表格居中、颜色区分
         import tempfile, os
-        width, height = 1280, 1024
-        # emby风格黑绿渐变背景
-        bg_color_top = (20, 30, 20)      # 深黑绿色
-        bg_color_bottom = (40, 180, 80)  # emby主绿色
-        title_color = (80, 255, 120)      # emby亮绿色
-        label_color = (220, 220, 220)    # 浅灰色
-        value_color = (80, 255, 120)     # emby亮绿色
-        table_header_bg = (30, 60, 30)   # 深绿色
-        table_line_color = (80, 255, 120) # emby亮绿色
+    width, height = 1280, 720  # 缩小图片高度，优化内容占比
+    # 更深黑色和低饱和绿色渐变
+    bg_color_top = (10, 15, 10)      # 更深黑绿色
+    bg_color_bottom = (30, 80, 40)   # 低饱和绿色
+    title_color = (120, 220, 120)      # 柔和绿色
+    label_color = (220, 220, 220)      # 浅灰色
+    value_color = (120, 220, 120)      # 柔和绿色
+    table_header_bg = (20, 40, 20)     # 更深绿色
+    table_line_color = (120, 220, 120) # 柔和绿色
         font_size = 32
         font_bold_size = 40
         font = self.get_chinese_font(font_size)
