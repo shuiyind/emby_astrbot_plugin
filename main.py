@@ -87,33 +87,54 @@ class EmbyReporterPlugin(Star):
         return ImageFont.load_default()
 
     def format_image(self, system_info, libraries):
-        # 生成 1280x1024 的图片，内容为报告（中文标题），返回临时文件路径，自动加载中文字体
+        # 美化图片报告样式，标题加粗、分隔线、表格居中、颜色区分
         import tempfile, os
         width, height = 1280, 1024
-        bg_color = (255, 255, 255)
-        font_color = (0, 0, 0)
+        bg_color = (245, 248, 255)
+        title_color = (40, 80, 180)
+        label_color = (60, 60, 60)
+        value_color = (20, 120, 60)
+        table_header_bg = (220, 230, 250)
+        table_line_color = (200, 200, 200)
         font_size = 32
+        font_bold_size = 40
         font = self.get_chinese_font(font_size)
+        font_bold = self.get_chinese_font(font_bold_size)
         img = Image.new("RGB", (width, height), bg_color)
         draw = ImageDraw.Draw(img)
-        y = 40
-        lines = [
-            "【Emby 服务器状态】",
-            f"服务器名称：{system_info.get('ServerName', 'N/A')}",
-            f"版本：{system_info.get('Version', 'N/A')}",
-            f"操作系统：{system_info.get('OperatingSystemDisplayName', 'N/A')}",
-            "",
-            "【媒体库统计】",
-            f"{'媒体库名称':<18}| {'条目数量':<10}",
-            f"{'-'*18}|{'-'*10}"
-        ]
+        y = 50
+        # 标题
+        draw.text((width//2-180, y), "Emby 服务器状态报告", font=font_bold, fill=title_color)
+        y += font_bold_size + 10
+        # 分隔线
+        draw.line([(80, y), (width-80, y)], fill=table_line_color, width=3)
+        y += 20
+        # 服务器信息
+        draw.text((120, y), "服务器名称：", font=font, fill=label_color)
+        draw.text((400, y), str(system_info.get('ServerName', 'N/A')), font=font, fill=value_color)
+        y += font_size + 8
+        draw.text((120, y), "版本：", font=font, fill=label_color)
+        draw.text((400, y), str(system_info.get('Version', 'N/A')), font=font, fill=value_color)
+        y += font_size + 8
+        draw.text((120, y), "操作系统：", font=font, fill=label_color)
+        draw.text((400, y), str(system_info.get('OperatingSystemDisplayName', 'N/A')), font=font, fill=value_color)
+        y += font_size + 18
+        # 媒体库统计标题
+        draw.text((width//2-120, y), "媒体库统计", font=font_bold, fill=title_color)
+        y += font_bold_size + 10
+        # 表头背景
+        draw.rectangle([(120, y), (width-120, y+font_size+10)], fill=table_header_bg)
+        draw.text((140, y), "媒体库名称", font=font, fill=label_color)
+        draw.text((540, y), "条目数量", font=font, fill=label_color)
+        y += font_size + 18
+        # 表格内容
         for lib in libraries:
-            name = lib.get('Name', 'N/A')
-            count = lib.get('TotalCount', 0)
-            lines.append(f"{name:<18}| {str(count):<10}")
-        for line in lines:
-            draw.text((40, y), line, font=font, fill=font_color)
-            y += font_size + 10
+            draw.text((140, y), str(lib.get('Name', 'N/A')), font=font, fill=value_color)
+            draw.text((540, y), str(lib.get('TotalCount', 0)), font=font, fill=value_color)
+            y += font_size + 8
+            # 分隔线
+            draw.line([(130, y), (width-130, y)], fill=table_line_color, width=1)
+            y += 2
         # 限制图片大小 < 2MB
         buf = io.BytesIO()
         img.save(buf, format="PNG", optimize=True)
