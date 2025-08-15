@@ -1,0 +1,4 @@
+aiohttp
+configparser
+jinja2
+pillow

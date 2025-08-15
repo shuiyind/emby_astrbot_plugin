@@ -1,0 +1,19 @@
+{
+  "url": {
+    "description": "Emby 服务器地址 (如 http://your-emby-server:8096)",
+    "type": "string",
+    "hint": "请填写 Emby 服务器地址"
+  },
+  "api_key": {
+    "description": "Emby API 密钥",
+    "type": "string",
+    "hint": "请填写 Emby API 密钥"
+  },
+  "output_type": {
+    "description": "输出方式，可选 markdown 或 image",
+    "type": "string",
+    "options": ["markdown", "image"],
+    "default": "markdown",
+    "hint": "选择报告输出格式"
+  }
+}
