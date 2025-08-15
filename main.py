@@ -104,9 +104,9 @@ class EmbyReporterPlugin(Star):
         draw = ImageDraw.Draw(img)
         y = 50
         # 标题
-        title = "Emby 服务器状态报告"
-        w_title, h_title = draw.textsize(title, font=font_bold)
-        draw.text(((width-w_title)//2, y), title, font=font_bold, fill=title_color)
+    title = "Emby 服务器状态报告"
+    w_title, h_title = font_bold.getsize(title)
+    draw.text(((width-w_title)//2, y), title, font=font_bold, fill=title_color)
         y += font_bold_size + 10
         # 分隔线
         draw.line([(80, y), (width-80, y)], fill=table_line_color, width=3)
@@ -115,15 +115,15 @@ class EmbyReporterPlugin(Star):
         info_labels = ["服务器名称：", "版本：", "操作系统："]
         info_values = [str(system_info.get('ServerName', 'N/A')), str(system_info.get('Version', 'N/A')), str(system_info.get('OperatingSystemDisplayName', 'N/A'))]
         for label, value in zip(info_labels, info_values):
-            w_label, _ = draw.textsize(label, font=font)
+            w_label, _ = font.getsize(label)
             draw.text((120, y), label, font=font, fill=label_color)
             draw.text((120+w_label+20, y), value, font=font, fill=value_color)
             y += font_size + 8
         y += 10
         # 媒体库统计标题
-        stat_title = "媒体库统计"
-        w_stat, h_stat = draw.textsize(stat_title, font=font_bold)
-        draw.text(((width-w_stat)//2, y), stat_title, font=font_bold, fill=title_color)
+    stat_title = "媒体库统计"
+    w_stat, h_stat = font_bold.getsize(stat_title)
+    draw.text(((width-w_stat)//2, y), stat_title, font=font_bold, fill=title_color)
         y += font_bold_size + 10
         # 表头背景
         draw.rectangle([(120, y), (width-120, y+font_size+10)], fill=table_header_bg)
