@@ -58,19 +58,42 @@ class EmbyReporterPlugin(Star):
         md += "```"
         return md
 
+    def get_chinese_font(self, font_size):
+        import os
+        font_file = self.config.get("font_file", "NotoSansSC-Regular.ttf")
+        plugin_dir = os.path.dirname(__file__)
+        font_path = os.path.join(plugin_dir, font_file)
+        if os.path.exists(font_path):
+            try:
+                from PIL import ImageFont
+                return ImageFont.truetype(font_path, font_size)
+            except:
+                pass
+        # 兼容系统字体
+        system_fonts = [
+            "msyh.ttc", "simhei.ttf", "simsun.ttc",
+            "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc",
+            "/usr/share/fonts/truetype/arphic/ukai.ttc",
+            "/usr/share/fonts/truetype/wqy/wqy-microhei.ttc"
+        ]
+        for path in system_fonts:
+            if os.path.exists(path):
+                try:
+                    from PIL import ImageFont
+                    return ImageFont.truetype(path, font_size)
+                except:
+                    continue
+        from PIL import ImageFont
+        return ImageFont.load_default()
+
     def format_image(self, system_info, libraries):
-        # 生成 1280x1024 的图片，内容为报告（中文标题），返回临时文件路径
+        # 生成 1280x1024 的图片，内容为报告（中文标题），返回临时文件路径，自动加载中文字体
         import tempfile, os
         width, height = 1280, 1024
         bg_color = (255, 255, 255)
         font_color = (0, 0, 0)
         font_size = 32
-        font_path = None
-        try:
-            font_path = "arial.ttf"
-            font = ImageFont.truetype(font_path, font_size)
-        except:
-            font = ImageFont.load_default()
+        font = self.get_chinese_font(font_size)
         img = Image.new("RGB", (width, height), bg_color)
         draw = ImageDraw.Draw(img)
         y = 40

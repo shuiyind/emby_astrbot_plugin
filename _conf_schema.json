@@ -15,5 +15,11 @@
     "options": ["markdown", "image"],
     "default": "markdown",
     "hint": "选择报告输出格式"
+  },
+  "font_file": {
+    "description": "图片报告使用的字体文件名（如 NotoSansSC-Regular.ttf）",
+    "type": "string",
+    "default": "NotoSansSC-Regular.ttf",
+    "hint": "请填写字体文件名，需放在插件目录下"
   }
 }

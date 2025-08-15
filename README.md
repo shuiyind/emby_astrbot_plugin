@@ -36,6 +36,7 @@
 - `url`：Emby 服务器地址（如 http://your-emby-server:8096）
 - `api_key`：Emby API 密钥
 - `output_type`：输出方式，可选 `markdown` 或 `image`
+- `font_file`：图片报告使用的字体文件名（如 NotoSansSC-Regular.ttf），需放在插件目录下
 
 
 ## 使用方法
