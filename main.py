@@ -40,16 +40,17 @@ class EmbyReporterPlugin(Star):
                 return None, None
 
     def format_markdown(self, system_info, libraries):
+        # Telegram MarkdownV2 语法，中文标题，表格用代码块包裹
         if not system_info or not libraries:
-            return "``\nError: Could not retrieve data from Emby.\n```"
-        md = "``\n"
-        md += "--- Emby Server Status ---\n"
-        md += f"Server Name : {system_info.get('ServerName', 'N/A')}\n"
-        md += f"Version     : {system_info.get('Version', 'N/A')}\n"
-        md += f"OS          : {system_info.get('OperatingSystemDisplayName', 'N/A')}\n\n"
-        md += "--- Media Library Stats ---\n"
-        md += "Library Name      | Item Count\n"
-        md += "------------------|-----------\n"
+            return "```\n错误：无法获取 Emby 数据。\n```"
+        md = "```\n"
+        md += "【Emby 服务器状态】\n"
+        md += f"服务器名称：{system_info.get('ServerName', 'N/A')}\n"
+        md += f"版本：{system_info.get('Version', 'N/A')}\n"
+        md += f"操作系统：{system_info.get('OperatingSystemDisplayName', 'N/A')}\n\n"
+        md += "【媒体库统计】\n"
+        md += f"{'媒体库名称':<18}| {'条目数量':<10}\n"
+        md += f"{'-'*18}|{'-'*10}\n"
         for lib in libraries:
             name = lib.get('Name', 'N/A')
             count = lib.get('TotalCount', 0)
@@ -58,7 +59,7 @@ class EmbyReporterPlugin(Star):
         return md
 
     def format_image(self, system_info, libraries):
-        # 生成 1280x1024 的图片，内容为报告
+        # 生成 1280x1024 的图片，内容为报告（中文标题）
         width, height = 1280, 1024
         bg_color = (255, 255, 255)
         font_color = (0, 0, 0)
@@ -73,14 +74,14 @@ class EmbyReporterPlugin(Star):
         draw = ImageDraw.Draw(img)
         y = 40
         lines = [
-            "Emby Server Status",
-            f"Server Name : {system_info.get('ServerName', 'N/A')}",
-            f"Version     : {system_info.get('Version', 'N/A')}",
-            f"OS          : {system_info.get('OperatingSystemDisplayName', 'N/A')}",
+            "【Emby 服务器状态】",
+            f"服务器名称：{system_info.get('ServerName', 'N/A')}",
+            f"版本：{system_info.get('Version', 'N/A')}",
+            f"操作系统：{system_info.get('OperatingSystemDisplayName', 'N/A')}",
             "",
-            "Media Library Stats",
-            "Library Name      | Item Count",
-            "------------------|-----------"
+            "【媒体库统计】",
+            f"{'媒体库名称':<18}| {'条目数量':<10}",
+            f"{'-'*18}|{'-'*10}"
         ]
         for lib in libraries:
             name = lib.get('Name', 'N/A')
@@ -116,6 +117,23 @@ class EmbyReporterPlugin(Star):
         ]
         if not any(phrase in msg for phrase in trigger_phrases):
             return
+        url = self.config.get("url", "")
+        api_key = self.config.get("api_key", "")
+        output_type = self.config.get("output_type", "markdown")
+        if not url or not api_key:
+            yield event.plain_result("请先在插件配置中填写 Emby 服务器地址和 API 密钥！")
+            return
+        system_info, libraries = await self.fetch_emby_data(url, api_key)
+        if output_type == "image":
+            buf = self.format_image(system_info, libraries)
+            yield event.image_result(buf)
+        else:
+            md = self.format_markdown(system_info, libraries)
+            yield event.plain_result(md)
+
+    @filter.command("emby_report", alias={"emby", "emby状态", "emby统计", "emby服务器", "embyreport", "emby_report", "embyinfo", "emby_info"})
+    async def cmd_emby_report(self, event: AstrMessageEvent):
+        """指令触发 Emby 信息查询，支持多种表达"""
         url = self.config.get("url", "")
         api_key = self.config.get("api_key", "")
         output_type = self.config.get("output_type", "markdown")
